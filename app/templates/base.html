@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {% set seo_title %}{% block title %}{{ site.name }}{% endblock %}{% endset %}
+  {% set seo_description %}{% block meta_description %}{{ site.description }}{% endblock %}{% endset %}
+  {% set seo_robots %}{% block meta_robots %}index, follow{% endblock %}{% endset %}
+  {% set canonical_url = config.SITE_URL.rstrip('/') ~ request.path %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1b2a2e">
+  <meta name="description" content="{{ seo_description|striptags|trim }}">
+  <meta name="robots" content="{{ seo_robots|trim }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.name }}">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="{{ seo_title|striptags|trim }}">
+  <meta property="og:description" content="{{ seo_description|striptags|trim }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:image" content="{{ config.SITE_URL.rstrip('/') }}/static/images/share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ site.share_alt }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ seo_title|striptags|trim }}">
+  <meta name="twitter:description" content="{{ seo_description|striptags|trim }}">
+  <meta name="twitter:image" content="{{ config.SITE_URL.rstrip('/') }}/static/images/share.png">
+  <title>{{ seo_title|striptags|trim }}</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="alternate icon" href="{{ url_for('main.favicon') }}" sizes="any">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/apple-touch-icon.png') }}">
+  <link rel="manifest" href="{{ url_for('main.manifest') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Asap:wdth,wght@75..125,100..900&family=Geist+Mono:wght@400;500;600&family=Instrument+Sans:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/shell.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  {% block head %}{% endblock %}
+  <script type="application/ld+json">{{ {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": site.name,
+    "url": config.SITE_URL.rstrip('/') ~ '/',
+    "description": seo_description|striptags|trim
+  }|tojson }}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header {% block header_class %}{% endblock %}">
+    <a class="brand" href="{{ url_for('main.index') }}" aria-label="{{ site.name }} home" aria-describedby="site-tagline">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 42V14m0 11L12 15m12 10 12-10M24 33 9 27m15 6 15-6M18 42h12"/></svg>
+      <span class="brand-copy"><span class="brand-name">{{ site.brand_first }} <i>{{ site.brand_second }}</i></span><small id="site-tagline" class="brand-tagline">{{ site.tagline }}</small></span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="{{ url_for('main.people') }}">People</a>
+      <a href="{{ url_for('main.places') }}">Places</a>
+      <a href="{{ url_for('main.stories') }}">Stories</a>
+      <a href="{{ url_for('main.search') }}">Search</a>
+      <a class="nav-tree" href="{{ url_for('main.explore') }}">Explore the tree <span aria-hidden="true">→</span></a>
+    </nav>
+  </header>
+  <main id="main">{% block content %}{% endblock %}</main>
+  <footer>
+    <a class="footer-brand" href="{{ url_for('main.index') }}" aria-label="{{ site.name }} home">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 42V14m0 11L12 15m12 10 12-10M24 33 9 27m15 6 15-6M18 42h12"/></svg>
+      <span>{{ site.brand_first }} <i>{{ site.brand_second }}</i></span>
+    </a>
+    <p>A family atlas built from records, for the relatives of every branch.</p>
+    <p class="privacy-note">Living relatives are kept off the public site by default.</p>
+    <p><a href="{{ url_for('main.about') }}">About</a> · <a href="{{ url_for('main.timeline') }}">Timeline</a> · <a href="{{ url_for('main.records') }}">Records</a> · <a href="{{ url_for('main.surnames') }}">Family names</a> · <a href="{{ url_for('main.contribute') }}">Contribute</a></p>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

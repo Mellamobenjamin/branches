@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Everyone in the archive — {{ site.name }}{% endblock %}
+{% block meta_description %}Browse the public {{ site.name }} family archive by surname, family line, place, date, and research status.{% endblock %}
+{% block header_class %}on-paper{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/people.css') }}">{% endblock %}
+{% block content %}
+<article class="page people-page">
+  <header class="page-head people-hero">
+    <p class="kicker">Everyone in the archive</p>
+    <h1>{{ index.total }} relatives,<br><em>{{ index.surnameCount }} family names.</em></h1>
+    <p class="lede people-lede">Browse by surname, or narrow to a branch, a country, or the records that carry independent sources. Living relatives are kept private and are not listed here.</p>
+    <label class="search-box people-search"><span>Search for a relative</span><input id="person-search" type="search" autocomplete="off" placeholder="Search a name, a nickname or a surname…"><div id="search-results" class="search-results"></div></label>
+  </header>
+
+  <section class="people-filters" aria-label="Filter relatives">
+    <div class="filter-row">
+      <p class="col-label">Branch</p>
+      <div class="chips" data-facet="branch">
+        <button type="button" class="chip active" data-value="">All branches</button>
+        {% for label, count in index.branches %}<button type="button" class="chip" data-value="{{ label }}">{{ label }} <span>{{ count }}</span></button>{% endfor %}
+      </div>
+    </div>
+    <div class="filter-row">
+      <p class="col-label">Born in</p>
+      <div class="chips" data-facet="country">
+        <button type="button" class="chip active" data-value="">Anywhere</button>
+        {% for label, count in index.countries %}<button type="button" class="chip" data-value="{{ label }}">{{ label }} <span>{{ count }}</span></button>{% endfor %}
+      </div>
+    </div>
+    <div class="filter-row">
+      <p class="col-label">Evidence</p>
+      <div class="chips" data-facet="evidence">
+        <button type="button" class="chip active" data-value="">Any</button>
+        <button type="button" class="chip" data-value="documented">Record-supported <span>{{ index.documented }}</span></button>
+      </div>
+    </div>
+  </section>
+
+  <nav class="alpha-jump" aria-label="Jump to surname initial">
+    {% for initial in index.initials %}<a href="#letter-{{ initial }}" data-initial="{{ initial }}">{{ initial }}</a>{% endfor %}
+  </nav>
+
+  <p class="result-count" id="result-count" aria-live="polite"></p>
+
+  <div class="surname-list" id="surname-list">
+    {% for group in index.groups %}
+    <section class="surname-group" id="surname-{{ group.slug }}" data-initial="{{ group.initial }}">{% if loop.changed(group.initial) %}<span class="letter-anchor" id="letter-{{ group.initial }}" aria-hidden="true"></span>{% endif %}
+      <header>
+        <h2>{{ group.surname }}</h2>
+        <p>{{ group.count }} {% if group.count == 1 %}relative{% else %}relatives{% endif %}{% if group.span %} · born {{ group.span }}{% endif %}</p>
+      </header>
+      <ul>
+        {% for person in group.people %}
+        <li data-branch="{{ person.branch }}" data-country="{{ person.country }}" data-evidence="{{ person.evidence }}">
+          <a class="p-row" href="{{ url_for('main.person', person_id=person.id) }}">
+            <span class="p-name">{{ person.name }}{% if person.researchReview %}<small>Research review</small>{% endif %}{% if person.formalName != person.name %}<small class="formal-name">{{ person.formalName }}</small>{% endif %}{% if person.nameNotes %}<small>{{ person.nameNotes }}</small>{% endif %}</span>
+            <span class="p-years num">{{ person.years }}</span>
+            <span class="p-line" title="{{ person.relationship or person.branch }}">{{ person.relationship or person.branch }}</span>
+            <span class="p-place" title="{{ person.geography }}">{{ person.geography }}</span>
+            {% if person.evidence == 'documented' %}<span class="p-mark" title="Record-supported" aria-label="Record-supported">&#9679;</span>{% endif %}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endfor %}
+  </div>
+  <p class="no-results" id="no-results" hidden>No relatives match these filters. <button type="button" id="clear-filters">Clear all filters</button></p>
+</article>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/simple-search.js') }}"></script><script src="{{ url_for('static', filename='js/people-index.js') }}"></script>{% endblock %}

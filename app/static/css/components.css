@@ -1,0 +1,93 @@
+/*
+ * components.css - the shared component layer.
+ *
+ * CONTRACT (docs/VISUAL_FIX_SPEC.md E11)
+ *
+ * This file loads AFTER every page stylesheet. That is deliberate, not a
+ * leftover of the retired theme.css. The distinction that matters:
+ *
+ *   theme.css existed to repaint three competing palettes and needed 18
+ *   !important declarations to win. That failure mode is gone - there is one
+ *   palette in tokens.css, no !important anywhere, and no magic numbers here.
+ *
+ *   This file owns SHARED COMPONENT styling: things that must look identical
+ *   on every page (header, footer, evidence badges, section headings, chips).
+ *   Page files own LAYOUT - grids, page-specific composition, breakpoints.
+ *
+ * RULES
+ *   1. Never declare a raw colour, size or space value. Tokens only.
+ *   2. Never use !important. If a page file fights this layer, the page file
+ *      is styling a shared component and should stop.
+ *   3. Never redefine a component that a page file already owns, or the
+ *      load-order dependency returns.
+ *
+ * tests/test_css_system.py enforces 1 and 2.
+ */
+/* Shared primitives only. Route-level layout belongs in each page stylesheet. */
+html{font-size:100%}
+body{min-width:320px;background:var(--ground);color:var(--ink);font:400 var(--step-0)/1.6 var(--font-body)}
+h1,h2,.person-identity h1,.people-hero h1,.places-hero h1{font-family:var(--font-display);font-weight:600;letter-spacing:-.02em}
+h3,h4,h5,h6,button,input,select,textarea,nav{font-family:var(--font-body)}
+table,.home-stat-grid,.place-summary,.tree-node text,.tree-key,.range-label output{font-family:var(--font-data);font-variant-numeric:tabular-nums}
+code,kbd,samp,.citation,.citation code,.record-id,[data-record-id]{font-family:var(--font-mono)}.stage-list-label{font-size:var(--step--1);letter-spacing:.08em}
+small,.event-evidence,.evidence-badge,.role-chip,.branch-label,.research-review{font-size:var(--step--1)}
+.site-header,.site-header.on-paper{height:var(--header-h);min-height:var(--header-h);padding:0 clamp(var(--s4),4vw,var(--s8));flex-wrap:nowrap;gap:var(--s5);background:var(--ink);color:var(--surface)}
+.site-header .brand{gap:var(--s2);font:600 var(--step-1)/1 var(--font-body)}
+.site-header .brand i{color:var(--surface)}
+.site-header .brand svg{width:28px;height:28px;stroke:var(--juniper-soft)}
+.site-header nav{position:static;display:flex;align-items:center;gap:clamp(var(--s3),2vw,var(--s6));margin-left:auto;font-size:var(--step--1)}
+.site-header nav .nav-tree{margin:0;padding:var(--s2) var(--s3);border-color:var(--juniper);border-radius:var(--radius);background:var(--juniper);color:var(--white)}
+.site-header nav .nav-tree:hover{border-color:var(--white);background:var(--white);color:var(--juniper)}
+footer{background:var(--ink);color:var(--line)}
+.people-page,.places-page,.place-page,.person-page{;}
+.people-lede,.places-hero>p:last-child,.place-identity>div:first-child>p:last-child{color:var(--muted)}
+.branch-context strong,.branch-label,.p-flags .branch-label,.role-chip{background:var(--water-soft);color:var(--ink)}
+.ev-documented,.event-evidence.ev-documented{background:var(--juniper);color:var(--white)}
+.ev-tree,.event-evidence.ev-tree{background:var(--brass-soft);color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass)}
+.ev-inferred,.event-evidence.ev-inferred{background:var(--crit-soft);color:var(--crit);box-shadow:inset 0 0 0 1px var(--crit)}
+.chip,.surname-group li,.place-tile,.relative-card,.external-record,.citation{border-color:var(--line)}
+.chip.active{border-color:var(--ink);background:var(--ink);color:var(--surface)}
+.back-link,.life-event a,.life-event summary,.place-timeline a{color:var(--juniper)}
+.person-map,.place-map{border-color:var(--water);background:var(--juniper-soft)}
+.life-events,.place-timeline{border-color:var(--water)}
+.story-marker{border:1px solid var(--brass);color:var(--ink-2);background:var(--brass-soft)}
+.node-story-marker{fill:var(--brass);font-size:var(--step-1)}
+button,input,.chip,.relative-card,.place-tile,.citation,.external-record,.home-story-panel,.home-discovery{border-radius:var(--radius)}
+@media(max-width:640px){.site-header,.site-header.on-paper{display:flex;height:var(--header-h);min-height:var(--header-h);padding:0 var(--s3)}.site-header .brand span{display:none}.site-header nav{width:auto;gap:var(--s3);font-size:var(--step--1)}.site-header nav a:first-child{display:none}.site-header nav .nav-tree{padding:var(--s2)}}
+
+/*
+ * Section headings.
+ * These replace all-caps micro-labels that were standing in for headings on the
+ * person, place and story pages - the reason those pages both shouted and had
+ * no hierarchy. Instrument Sans stays at or above its 24px floor.
+ */
+.section-title{
+  margin:0 0 var(--s4);
+  color:var(--ink);
+  font:600 var(--step-2)/1.2 var(--font-display);
+  letter-spacing:-.02em;
+}
+.atlas-level{
+  margin:0 0 var(--s2);
+  color:var(--muted);
+  font:600 var(--step--1)/1.3 var(--font-body);
+  letter-spacing:.04em;
+}
+/* Dark surfaces need their own foreground colors. */
+.site-header .brand,.site-header nav a{color:var(--surface)}
+.site-header .brand svg{stroke:var(--juniper-soft)}
+.site-header .brand-copy{display:flex;flex-direction:column;gap:4px;white-space:nowrap}
+.site-header .brand-name{display:block}
+.site-header .brand-tagline{font:400 0.75rem/1.2 var(--font-body);color:var(--surface);opacity:.8;letter-spacing:.01em}
+@media(max-width:640px){
+  .site-header{gap:var(--s3)}
+  .site-header .brand{flex-shrink:0}
+  .site-header .brand .brand-copy{display:flex;gap:3px}
+  .site-header .brand .brand-name{display:block;font-size:1rem}
+  .site-header .brand-tagline{font-size:.6875rem}
+  .site-header .brand svg{width:22px;height:22px;flex-shrink:0}
+  .site-header nav a:not(.nav-tree){display:none}
+}
+body>footer a{color:var(--surface)}
+body>footer .footer-brand i{color:var(--surface)}
+body>footer .footer-brand svg{stroke:var(--juniper-soft)}

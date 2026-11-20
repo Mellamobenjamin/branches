@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}{{ site.home_title }}{% endblock %}
+{% block meta_description %}{{ site.home_description }}{% endblock %}
+{% block header_class %}living-header{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}" crossorigin=""><link rel="stylesheet" href="{{ url_for('static', filename='css/living-home.css') }}">{% endblock %}
+{% block content %}
+<section class="living-home" id="family-map" aria-labelledby="stage-title">
+  <div id="heritage-map-canvas" aria-label="Interactive geography of {{ site.family_label }} tree"></div><div class="living-map-shade" aria-hidden="true"></div>
+  <aside class="home-story-panel" data-view="overview" aria-live="polite">
+    <p class="home-positioning">{% if convergence.marriages %}{{ home_copy.positioning.format(weddings=convergence.marriages|length, first_year=convergence.firstYear, last_year=convergence.lastYear, descendants=convergence.descendants) }}{% else %}{{ home_copy.positioning_fallback }}{% endif %}</p>
+    <div class="home-map-controls" role="group" aria-label="Choose a chapter of the family map">
+      <button class="active" data-stage="origins" aria-pressed="true"><span>01</span><b>Where they began</b></button>
+      <button data-stage="gateways" aria-pressed="false"><span>02</span><b>The streams cross</b></button>
+      <button data-stage="homesteads" aria-pressed="false"><span>03</span><b>Where they took root</b></button>
+    </div>
+
+    <button id="stage-reset" class="stage-reset" hidden>← Return to this map chapter</button>
+    <h1 id="stage-title">Two streams, two centuries apart</h1><p class="stage-summary" id="stage-summary">{{ home_copy.intro_summary }}</p>
+    <noscript><p class="callout">The interactive map needs JavaScript. <a href="/places">Browse family places</a> or search for a relative below.</p></noscript>
+    <div class="home-anecdote"><p id="stage-anecdote">{% if convergence.marriages %}{{ home_copy.anecdote.format(weddings=convergence.marriages|length, first_year=convergence.firstYear, last_year=convergence.lastYear, descendants=convergence.descendants) }}{% else %}{{ home_copy.anecdote_fallback }}{% endif %}</p></div>
+    <div class="family-stream-legend" id="family-stream-legend" aria-label="Main family streams">{% for branch in branches %}<span class="stream-slot-{{ branch.slot + 1 }}">{{ branch.surname }}</span>{% endfor %}</div>
+    <p class="stage-list-label" id="stage-list-label">Places in this chapter</p><div class="stage-place-list" id="stage-place-list"></div>
+    <p class="stage-method" id="stage-method"></p>
+  </aside>
+  <section class="home-discovery" aria-label="Find a relative">
+    <form class="home-search" action="{{ url_for('main.search') }}" method="get"><label class="sr-only" for="home-person-search">Search relatives</label><input id="home-person-search" name="q" type="search" autocomplete="off" placeholder="Search a name, a nickname or a surname&hellip;"><button type="submit" aria-label="Search">&rarr;</button><div id="home-search-results" class="home-search-results" aria-live="polite"></div></form>
+    <a class="home-browse-link" href="{{ url_for('main.people') }}">Browse all {{ stats.people }} relatives &rarr;</a>
+  </section>
+</section>
+
+<section class="home-stats" aria-label="At a glance">
+  <dl class="home-stat-grid">
+    <div><a href="{{ url_for('main.people') }}"><dt>{{ stats.people }}</dt><dd>relatives</dd></a></div>
+    <div><a href="{{ url_for('main.records') }}"><dt>{{ "{:,}".format(stats.events) }}</dt><dd>life events</dd></a></div>
+    <div><a href="{{ url_for('main.timeline') }}"><dt>{{ stats.firstYear }}&ndash;{{ stats.lastYear }}</dt><dd>timeline</dd></a></div>
+  </dl>
+</section>
+
+{% if convergence.marriages %}
+<section class="convergence" id="convergence">
+  <header class="sec-head">
+    
+    <h2>Two streams,<br><em>{{ convergence.marriages|length }} weddings,</em><br>one family.</h2>
+    <p>{{ home_copy.convergence_body.format(weddings=convergence.marriages|length, first_year=convergence.firstYear, last_year=convergence.lastYear, descendants=convergence.descendants) }}</p>
+  </header>
+  <p class="convergence-note">{{ convergence.descendants }} is the combined count of distinct descendants. Some relatives descend from more than one of these marriages, so the individual counts overlap.</p>
+  <ol class="merge-list">
+    {% for marriage in convergence.marriages %}
+    <li>
+      <time>{{ marriage.year }}{% if marriage.estimated %}<abbr title="No marriage date is recorded; estimated from the first child's birth">approx.</abbr>{% endif %}</time>
+      <div class="merge-pair">
+        <a href="{{ url_for('main.person', person_id=marriage.husband.id) }}">
+          {% if marriage.husbandLine %}<em class="line-tag line-slot-{{ marriage.husbandLine.streamSlot }}">{{ marriage.husbandLine.surname }} line &middot; {{ marriage.husbandLine.homeland }}</em>{% endif %}
+          <strong>{{ marriage.husband.name }}</strong><span>{{ marriage.husband.years }}</span>
+          {% if marriage.husbandLine and marriage.husbandLine.earliestYear %}<small>traced to {{ marriage.husbandLine.earliestYear }}</small>{% endif %}
+        </a>
+        <i aria-hidden="true">×</i>
+        <a href="{{ url_for('main.person', person_id=marriage.wife.id) }}">
+          {% if marriage.wifeLine %}<em class="line-tag line-slot-{{ marriage.wifeLine.streamSlot }}">{{ marriage.wifeLine.surname }} line &middot; {{ marriage.wifeLine.homeland }}</em>{% endif %}
+          <strong>{{ marriage.wife.name }}</strong><span>{{ marriage.wife.years }}</span>
+          {% if marriage.wifeLine and marriage.wifeLine.earliestYear %}<small>traced to {{ marriage.wifeLine.earliestYear }}</small>{% endif %}
+        </a>
+      </div>
+      <div class="merge-outcome">
+        <p class="merge-impact"><b>{{ marriage.descendants }}</b> relatives descend from this marriage{% if marriage.children %}, beginning with {{ marriage.children }} {{ 'child' if marriage.children == 1 else 'children' }}{% endif %}{% if marriage.place %} in {{ marriage.place }}{% endif %}.</p>
+        {% for branch in marriage.presentBranches %}<a href="{{ url_for('main.person', person_id=branch.anchor.id) }}"><span>Continues into</span><strong>{{ branch.label }}</strong><small>through {{ branch.anchor.name }}</small></a>{% endfor %}
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+
+<section class="home-story-shelf" aria-labelledby="home-stories-title"><header class="sec-head"><h2 id="home-stories-title">Stories from the records</h2><a href="{{ url_for('main.stories') }}">All stories →</a></header><div>{% for story in stories %}<a class="card" href="{{ url_for('main.story', slug=story.slug) }}"><span>{{ story.eyebrow }}</span><strong>{{ story.title }}</strong><p>{{ story.dek }}</p></a>{% endfor %}</div></section>
+
+{% if outliers %}<section class="pattern-breaks" id="pattern-breaks" aria-labelledby="pattern-breaks-title"><header class="sec-head"><h2 id="pattern-breaks-title">A life in family context</h2><p>A selected life, seen beside the siblings who shared its beginnings. These recorded destinations raise a human question: what took one person so far from the others? They establish where lives ended, not the journeys in between.</p></header><div class="outlier-feed">{% for item in outliers %}<article class="ledger"><div class="ledger-key"><b>{{ item.person.years }}</b></div><div class="ledger-body"><h3><a href="{{ url_for('main.person', person_id=item.person.id) }}">{{ item.person.name }}</a></h3><strong>{{ item.title }}</strong>{% if item.review %}<p>Research review</p>{% endif %}<p>{{ item.context }}</p>{% if item.siblings %}<p>Compared with siblings</p><div class="card-grid">{% for sibling in item.siblings %}<a href="{{ url_for('main.person', person_id=sibling.id) }}">{{ sibling.name }}<span>{{ sibling.years }}</span></a>{% endfor %}</div>{% endif %}</div></article>{% endfor %}</div><p class="section-more"><a href="{{ url_for('main.people') }}">Browse all relatives &rarr;</a></p></section>
+
+{% endif %}
+<section class="branch-characters" id="branch-characters" aria-labelledby="branch-characters-title"><header class="sec-head"><h2 id="branch-characters-title">Every line carries a different shape</h2><p>Meet the larger surname lines in this archive. Each profile introduces the relatives who share a recorded birth surname, then summarizes their places and evidence.</p><p class="section-explainer">These groups are narrower than the family branches on the map. Read the figures as a snapshot of the public records: the year span covers births, record support means an independent source is linked, and the movement figure counts relatives born and deceased in different known countries.</p></header><div class="card-grid">{% for card in branch_cards %}<a href="{{ url_for('main.surname', slug=card.slug) }}"><h3>{{ card.surname }}</h3><p class="family-intro">{{ card.intro }}</p><p class="family-span">{{ card.people }} relatives · {{ card.span }}</p><dl><div><dt>{{ card.homeland }}</dt><dd>most common birth country</dd></div><div><dt>{{ card.documentedPercent }}%</dt><dd>record-supported</dd></div><div><dt>{{ card.movementPercent }}%</dt><dd>born and died in different countries</dd></div></dl></a>{% endfor %}</div><p class="section-more"><a href="{{ url_for('main.surnames') }}">All {{ surname_count }} family names &rarr;</a></p></section>
+
+<section class="family-timeline" id="family-timeline">
+  <header class="sec-head"><h2>Five centuries of family history</h2><p>Follow the dated family records through the world around them. The dates mark entries in the tree; the historical context describes the wider setting, not proof of an ancestor's journey.</p></header>
+  <div class="timeline-track">{% for item in timeline %}<article><time>{{ item.year }}</time><i aria-hidden="true"></i><div><p>{{ item.place }}</p><h3>{{ item.title }}</h3><span class="timeline-family-text">{{ item.text }}</span>{% if item.context %}<aside class="timeline-context"><b>Historical context</b><p>{{ item.context }}</p>{% if item.contextUrl %}<a href="{{ item.contextUrl }}">{{ item.contextSource or "Source" }} &rarr;</a>{% endif %}</aside>{% endif %}</div></article>{% endfor %}</div>
+</section>
+
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/simple-search.js') }}"></script><script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}" crossorigin=""></script><script src="{{ url_for('static', filename='js/home-map.js') }}"></script>{% endblock %}

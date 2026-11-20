@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Not found — {{ site.name }}{% endblock %}
+{% block meta_description %}The requested {{ site.name }} family record or page could not be found.{% endblock %}
+{% block meta_robots %}noindex, follow{% endblock %}
+{% block header_class %}on-paper{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/people.css') }}">{% endblock %}
+{% block content %}
+<article class="page people-page not-found">
+  <header class="page-head"><p class="kicker">This page isn’t in the archive</p>
+  <h1>We can’t find that record.</h1>
+  <p class="lede">Two things usually explain this: the link points to a record that has since changed, or it points to someone who is still living. Living relatives are kept off the public tree on purpose, so some people genuinely aren’t here.</p>
+  </header><label class="search-box not-found-search"><span>Search for a relative</span><input id="person-search" type="search" autocomplete="off" placeholder="Search a name, a nickname or a surname…"><div id="search-results" class="search-results"></div></label>
+  <div class="card-grid">
+    <a href="{{ url_for('main.people') }}"><strong>Browse everyone</strong><span>All public relatives by surname →</span></a>
+    <a href="{{ url_for('main.places') }}"><strong>Browse places</strong><span>The family atlas →</span></a>
+    <a href="{{ url_for('main.explore') }}"><strong>Open the family tree</strong><span>Move through generations →</span></a>
+  </div>
+</article>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/simple-search.js') }}"></script>{% endblock %}

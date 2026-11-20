@@ -1,0 +1,114 @@
+:root {
+  color-scheme: light;
+
+  /*
+   * Surface ramp — four steps.
+   * Two steps (1.11:1) gave cards no separation from the page they sat on.
+   * Every adjacent pair here is resolvable; full range is 1.42:1.
+   */
+  --sunken: #dfe0d8;
+  --ground: #e9e9e3;
+  --surface: #f5f5f0;
+  --raised: #ffffff;
+
+  /*
+   * Ink and signal.
+   * Every value below is solved against --sunken, the darkest surface, so it
+   * clears 4.5:1 on all four steps rather than only on the page ground.
+   */
+  --ink: #1b2a2e;
+  --ink-2: #3d5054;
+  --muted: #526062;
+  --line: #c7c9bf;
+  --line-soft: #d8d9d0;
+  --cornflower-yellow: #efd36b;
+  --cornflower-soft: color-mix(in srgb, var(--surface) 78%, var(--cornflower-yellow));
+
+  /* One owner per colour. See docs/VISUAL_FIX_SPEC.md §A. */
+  --juniper: #2f6152;   /* accent: primary actions, nav, links, map land       */
+  --brass: #7b571d;     /* signal: submitted-tree assertion only               */
+  --crit: #8c3a2b;      /* alarm: open evidence conflict                       */
+  --water: #426177;     /* secondary meta, borders                             */
+  --ocean: #24414f;     /* map water only — never text, never an accent        */
+
+  --white: #ffffff;
+  --black: #000000;
+
+  --surface-soft: color-mix(in srgb, var(--surface) 84%, var(--water));
+  --surface-warm: color-mix(in srgb, var(--surface) 88%, var(--brass));
+  --juniper-soft: color-mix(in srgb, var(--surface) 82%, var(--juniper));
+  --water-soft: color-mix(in srgb, var(--surface) 82%, var(--water));
+  --brass-soft: color-mix(in srgb, var(--surface) 84%, var(--brass));
+  --crit-soft: color-mix(in srgb, var(--surface) 86%, var(--crit));
+
+  /*
+   * Branch streams — their own scale, deliberately outside the accent/signal
+   * set so family identity never collides with the evidence vocabulary.
+   * Lightened for the dark ocean and luminance-staggered so the four also
+   * separate in greyscale and for colour-vision deficiency.
+   */
+  --stream-1: #6798a5;
+  --stream-2: #7ec1ad;
+  --stream-3: #ead0a4;
+  --stream-4: #f9edea;
+
+  /* Shadows are reserved for overlays. */
+  --shadow-overlay: 0 1px 2px rgb(27 42 46 / 6%), 0 8px 28px rgb(27 42 46 / 7%);
+
+  /* Compatibility names remain aliases only; page files no longer own palettes. */
+  --navy: var(--ink);
+  --navy-deep: var(--ink);
+  --blue: var(--water);
+  --blue-bright: var(--water);
+  --blue-soft: var(--water-soft);
+  --map-land: var(--juniper-soft);
+  --yellow: var(--brass);
+  --yellow-soft: var(--brass-soft);
+  --gold-ink: var(--brass);
+  --paper: var(--surface);
+  --forest: var(--juniper);
+  --deep: var(--ink);
+  --cream: var(--surface);
+  --sage: var(--juniper);
+  --gold: var(--brass);
+  --rust: var(--crit);
+  --teal: var(--water);
+  --deep-teal: var(--ink);
+  --coral: var(--crit);
+  --land: var(--juniper-soft);
+  --green: var(--juniper);
+
+  --font-display: "Instrument Sans", Arial, sans-serif;
+  --font-body: "Archivo", Arial, sans-serif;
+  --font-data: "Asap", Arial, sans-serif;
+  --font-mono: "Geist Mono", Consolas, monospace;
+  --sans: var(--font-body);
+  --serif: var(--font-display);
+
+  --step--1: 0.8125rem;   /* 13px - labels, meta, chips. Accessibility floor. */
+  --step--0: 0.9375rem;   /* 15px - card copy, secondary prose                */
+  --step-0: 1.0625rem;         /* 16px - article body                              */
+  --step-1: 1.25rem;    /* 19px - leads, stat figures                       */
+  --step-2: 1.5rem;       /* 24px - section headings. Instrument Sans floor.  */
+  --step-3: 2rem;     /* 30px                                             */
+  --step-4: 2.75rem;      /* 36px                                             */
+  --step-5: 3.5rem;      /* 44px - page H1                                   */
+
+  --s1: 0.25rem;
+  --s2: 0.5rem;
+  --s3: 0.75rem;
+  --s4: 1rem;
+  --s5: 1.5rem;
+  --s6: 2rem;
+  --s7: 3rem;
+  --s8: 4.5rem;
+  --s9: 6.5rem;
+
+  --header-h: 3.5rem;
+  --radius: 3px;
+  --border: 1px;
+}
+
+@media (max-width: 640px) {
+  :root { --header-h: 3.25rem; }
+}

@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+access.log
+error.log
+gunicorn.pid
+nohup.out
+
+# A real family's data never belongs in this repository.
+data/*.ged
+data/*.sqlite
+data/*.sqlite3
+data/*.db
+data/research_archive/
+data/curated/
+
+# Site profiles: only the fictional example is tracked. Put your own family's
+# profile in app/profiles/<name>.py and it stays local.
+app/profiles/*.py
+!app/profiles/__init__.py
+!app/profiles/example.py
+
+# qa/ is local scratch: screenshots and throwaway browser profiles.
+qa/

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Family atlas — {{ site.name }}{% endblock %}
+{% block meta_description %}{{ site.places_description }}{% endblock %}
+{% block header_class %}on-paper{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}" crossorigin=""><link rel="stylesheet" href="{{ url_for('static', filename='css/places.css') }}"><link rel="stylesheet" href="{{ url_for('static', filename='css/layered-places.css') }}">{% endblock %}
+{% block content %}<article class="page places-page layered-places"><header class="page-head places-hero"><p class="kicker">The {{ site.brand_first }} family atlas</p><h1>From wide geographies to family communities.</h1><p class="lede">Begin with one geographic chapter, move into a region, then open the towns and counties connected to individual lives.</p></header>
+<div class="sec-head"><h2>Three chapters of place</h2></div><section class="layered-atlas" data-hierarchy='{{ hierarchy|tojson }}'>
+  <nav class="atlas-breadcrumb" id="atlas-breadcrumb" aria-label="Atlas level"><button data-level="root">Family atlas</button></nav>
+  <div class="atlas-workspace"><aside class="atlas-panel"><p class="atlas-level" id="atlas-level">Geographies</p><h2 id="atlas-title">Three chapters of place</h2><p id="atlas-summary">Choose a chapter to move from the family’s broad geography into its regions and communities.</p><div id="atlas-choices" class="atlas-choices"></div></aside><div id="places-map" class="places-map" aria-label="Layered map of family places"></div></div>
+</section>
+<section class="place-directory-fallback" aria-labelledby="place-directory-title">
+  <div class="sec-head"><h2 id="place-directory-title">Browse places by name</h2><p>Open a place page directly, or use the map above to explore by region.</p></div>
+  {% for chapter in hierarchy %}<details><summary>{{ chapter.title }}</summary>
+    {% for region in chapter.regions %}<h3>{{ region.title }}</h3><ul>{% for community in region.communities %}<li><a href="{{ url_for('main.place', place_slug=community.slug) }}">{{ community.name }}</a></li>{% endfor %}</ul>{% endfor %}
+  </details>{% endfor %}
+</section></article>{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}" crossorigin=""></script><script src="{{ url_for('static', filename='js/places-map.js') }}"></script>{% endblock %}

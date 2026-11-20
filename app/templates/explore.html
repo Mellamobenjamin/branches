@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Explore the tree — {{ site.name }}{% endblock %}
+{% block meta_description %}Explore generations of {{ site.family_label }} tree, move between ancestors and descendants, and follow documented family connections.{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}" crossorigin="">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/explore.css') }}">
+{% endblock %}
+{% block content %}
+<section class="explore-layout">
+  <aside class="explore-sidebar">
+    <div class="explore-head">
+      <h1>Move through the generations.</h1>
+      <p>Choose a relative, then move toward the family before or after them.</p>
+    </div>
+    <button class="mobile-control-toggle" id="mobile-control-toggle" type="button" aria-expanded="false" aria-controls="tree-controls-body">
+      <span>Change starting point</span>
+      <strong id="mobile-control-summary">{{ root.display_name }} · Earlier family</strong>
+      <i aria-hidden="true">+</i>
+    </button>
+    <div class="tree-controls-body" id="tree-controls-body">
+    <nav class="tree-history" aria-label="Tree navigation">
+      <button id="tree-back" type="button" disabled><span aria-hidden="true">←</span> Back in the tree</button>
+      <ol id="tree-trail"></ol>
+    </nav>
+    <div class="tree-start-context card" aria-live="polite">
+      <p class="control-label">Starting with</p>
+      <strong id="tree-root-name">{{ root.display_name }}</strong>
+      <span id="tree-root-reason">A familiar grandparent-generation anchor for the public {{ site.brand_first }} branch.</span>
+      <a id="tree-root-record" href="{{ url_for('main.person', person_id=root.id) }}">Open this person’s record →</a>
+    </div>
+    <div class="explorer-toolbar">
+      <label class="branch-start" for="branch-start"><span>Start with a familiar branch</span><select id="branch-start"><option value="" disabled>Choose a starting branch</option>{% for branch in branches %}<option value="{{ branch.root.id }}" data-name="{{ branch.root.name }}" data-surname="{{ branch.surname }}" {% if branch.root.id == root.id %}selected{% endif %}>{{ branch.label }} · {{ branch.root.name }}</option>{% endfor %}</select></label>
+      <label class="search-box"><span>Choose a different relative</span><input id="person-search" type="search" autocomplete="off" placeholder="Search by name…"><div id="search-results" class="search-results"></div></label>
+      <div class="tree-choice direction-choice"><p>Family direction</p><div role="group" aria-label="Which side of this person's family to show"><button type="button" class="active" aria-pressed="true" data-direction="ancestors"><strong>Earlier</strong><small>Parents</small></button><button type="button" aria-pressed="false" data-direction="descendants"><strong>Later</strong><small>Children</small></button></div></div>
+      <label class="tree-choice depth-choice" for="tree-depth"><span>Branch view</span><select id="tree-depth" aria-describedby="generation-hint"><option value="fit">Fitted overview · open branches as needed</option><option value="2">Close family · 2 steps</option><option value="all">Whole branch · everything found</option></select><small id="generation-hint" class="depth-hint"></small></label>
+    </div>
+    <div id="tree-continuation" class="tree-continuation" aria-live="polite"></div>
+    </div>
+  </aside>
+  <section class="explorer" data-root="{{ request.args.get('root', root.id) }}" data-default-root="{{ root.id }}">
+    <div class="view-tabs" role="tablist"><button class="active" id="tab-tree-panel" role="tab" aria-selected="true" aria-controls="tree-panel" data-view="tree-panel">Family tree</button><button id="tab-map-panel" role="tab" aria-selected="false" aria-controls="map-panel" data-view="map-panel">Migration map</button></div>
+    <div id="tree-panel" class="view-panel active" role="tabpanel" aria-labelledby="tab-tree-panel" tabindex="0">
+      <div class="viz-status" id="tree-status">Loading family tree…</div>
+<nav class="tree-navigation" aria-label="Tree history"><button id="tree-canvas-back" type="button" disabled>&larr; Back to previous person</button><button id="tree-reset" type="button">Return to starting person</button></nav>
+      <div id="tree-canvas" class="tree-canvas"></div>
+      <div class="tree-key"><span><i class="branch-line-key"></i>active family line</span><span><i class="parent-line"></i>parent / child</span><span><i class="spouse-line"></i>partners</span><small>Show or hide family on a card to open and close a line.</small></div>
+      <section id="tree-person-summary" class="tree-person-summary" aria-live="polite" aria-label="Focused person"></section>
+    </div>
+    <div id="map-panel" class="view-panel" role="tabpanel" aria-labelledby="tab-map-panel" tabindex="0">
+      <div id="family-map" class="family-map"><div class="viz-status">Loading migration map…</div></div>
+      <aside class="map-story"><p class="kicker">Reading the family atlas</p><h2>{{ site.explore_map_heading }}</h2><p>Each circle gathers every life event tied to an area—births, homes, marriages, deaths, burials, and more. Larger circles connect more family activity to that place.</p><p class="map-caveat">Select any circle to see its people and time span. Dashed lines show the broad direction in which branches connect across the tree.</p></aside>
+    </div>
+  </section>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}" crossorigin=""></script>
+<script src="{{ url_for('static', filename='js/explore.js') }}"></script>
+{% endblock %}

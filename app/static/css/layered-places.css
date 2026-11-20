@@ -1,0 +1,109 @@
+/*
+ * Layered family atlas.
+ * Re-migrated from the pre-token original: the first migration corrupted
+ * every leading '.' into 'l', leaving 77 dead selectors.
+ */
+.layered-places { padding-top: calc(var(--header-h) + var(--s7)); }
+.layered-places .places-hero { margin: var(--s4) 0 var(--s6); }
+.layered-places .places-hero h1 { max-width: 900px; font-size: var(--step-4); }
+.layered-atlas { margin-bottom: 3rem; }
+.atlas-breadcrumb { display: flex; align-items: center; gap: var(--s3); min-height: 46px; padding: var(--s2) var(--s4); background: var(--juniper-soft); border-bottom: 1px solid var(--line); font-size: var(--step--1); }
+.atlas-breadcrumb button { padding: var(--s1); border: 0; border-bottom: 1px solid var(--water); background: transparent; color: var(--ink); cursor: pointer; }
+.atlas-breadcrumb span { color: var(--muted); }
+.atlas-breadcrumb strong { font-weight: 600; }
+.atlas-workspace {
+  border:1px solid var(--line-soft); display: grid; grid-template-columns: 410px minmax(0, 1fr); min-height: 620px; background: var(--ocean);  }
+.atlas-workspace .places-map { height: 620px; }
+.atlas-panel {
+   position: relative; z-index: 500; padding: var(--s6) var(--s6); overflow: auto; border-right: 1px solid color-mix(in srgb, var(--white) 18%, transparent); background: var(--ink); color: var(--white); }
+.atlas-panel h2 { margin: .7rem 0 1rem; font: 500 2.25rem/1.02 var(--serif); }
+.atlas-choices { display: grid; margin-top: var(--s5); border-top: 1px solid color-mix(in srgb, var(--white) 25%, transparent); }
+.atlas-choices button { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s1); padding: var(--s4) var(--s8) var(--s4) 0; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--white) 20%, transparent); background: transparent; color: var(--white); text-align: left; cursor: pointer; }
+.atlas-choices button:hover { background: color-mix(in srgb, var(--white) 8%, transparent); }
+.atlas-choices button.map-active { background: color-mix(in srgb, var(--white) 12%, transparent); box-shadow: inset 4px 0 0 var(--yellow); }
+.atlas-choices button > span { grid-column: 1/-1; color: var(--brass); font-size: var(--step--1); letter-spacing: .13em; text-transform: uppercase; }
+.atlas-choices button strong { font: 500 1.08rem var(--serif); }
+.atlas-choices button p { display: -webkit-box; margin: 0; overflow: hidden; color: var(--juniper-soft); font-size: var(--step--1); line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+.atlas-choices button small { color: var(--juniper-soft); font-size: var(--step--1); }
+.atlas-choices button i { position: absolute; right: 0; top: 50%; font-size: var(--step--1); font-style: normal; transform: translateY(-50%); }
+.atlas-branch-tags { display: flex; flex-wrap: wrap; gap: var(--s1); margin-top: var(--s1); color: inherit; letter-spacing: 0; text-transform: none; }
+.atlas-branch-tags b { padding: var(--s1) var(--s2); background: color-mix(in srgb, var(--brass) 14%, transparent); color: var(--yellow); font-size: var(--step--1); font-weight: 600; }
+.layered-atlas .leaflet-tooltip { max-width: min(220px, 78vw); white-space: normal; }
+.layered-atlas .leaflet-tooltip span { display: block; margin-top: var(--s1); color: var(--muted); font-size: var(--step--1); }
+
+/* Root-level dots are chapter entrances, not generic map pins. */
+.atlas-chapter-icon { border: 0; background: transparent; }
+.atlas-chapter-marker { position: relative; width: 280px; height: 78px; font-family: var(--sans); }
+.atlas-chapter-marker.compact { width: 60px; height: 60px; }
+.chapter-dot { position: absolute; top: 12px; left: 0; display: grid; place-items: center; width: 54px; height: 54px; border: 3px solid var(--white); border-radius: 50%; background: var(--chapter-color); color: var(--white);  transition: transform .18s, box-shadow .18s; }
+.atlas-chapter-marker.compact .chapter-dot { top: 3px; left: 3px; }
+.chapter-dot b { font-size: var(--step--1); letter-spacing: .08em; }
+.atlas-chapter-marker[data-id="american-footholds"] .chapter-dot { color: var(--navy-deep); }
+.chapter-callout { position: absolute; top: 5px; left: 66px; display: grid; gap: .16rem; width: 205px; min-height: 68px; padding: .62rem .72rem; border-left: 3px solid var(--chapter-color); background: var(--surface); color: var(--ink);  }
+.chapter-callout:before { content: ""; position: absolute; left: -15px; top: 32px; width: 12px; border-top: 1px solid var(--chapter-color); }
+.chapter-callout strong { font: 600 .75rem var(--serif); }
+.chapter-callout small { color: var(--muted); font-size: var(--step--1); }
+.chapter-callout em { color: var(--gold-ink); font-size: var(--step--1); font-style: normal; }
+.atlas-chapter-marker.label-left .chapter-dot { right: 0; left: auto; }
+.atlas-chapter-marker.label-left .chapter-callout { right: 66px; left: auto; border-right: 3px solid var(--chapter-color); border-left: 0; text-align: right; }
+.atlas-chapter-marker.label-left .chapter-callout:before { right: -15px; left: auto; }
+.atlas-chapter-marker.home-chapter .chapter-callout { top: 22px; }
+.atlas-chapter-marker.home-chapter .chapter-callout:before { top: 15px; }
+.atlas-chapter-marker.active .chapter-dot { transform: scale(1.12);  }
+.atlas-chapter-marker.active .chapter-callout { background: var(--yellow-soft); }
+
+@media (max-width: 1100px) {
+  .layered-places { padding-top: 7rem; }
+  .layered-places .places-hero { margin: .5rem 0 2rem; }
+  .atlas-workspace {
+  border:1px solid var(--line-soft); grid-template-columns: 1fr; }
+  .atlas-panel {
+   max-height: none; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--white) 18%, transparent); }
+  .atlas-workspace .places-map { height: 480px; }
+  .atlas-choices { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; border-top: 0; }
+  .atlas-choices button { min-height: 118px; padding: var(--s3) var(--s3); border: 1px solid color-mix(in srgb, var(--white) 18%, transparent); }
+  .atlas-choices button i { position: static; transform: none; margin-top: var(--s1); }
+}
+
+@media (max-width: 520px) {
+  .layered-places { padding-top: 7rem; }
+  .layered-places .places-hero { margin-top: var(--s4); }
+  .atlas-workspace .places-map { height: 390px; }
+  .atlas-panel {
+  border:1px solid var(--line-soft); padding: var(--s5); }
+  .atlas-panel h2 { font-size: var(--step-2); }
+  .atlas-choices { grid-template-columns: 1fr; }
+  .atlas-choices button { min-height: 0; padding: .85rem var(--s3); }
+  .atlas-chapter-marker { width: 60px; height: 60px; }
+  .chapter-callout { display: none; }
+}
+.page.layered-places{padding-top:calc(var(--header-h) + var(--s6))}
+.page.layered-places .places-hero{margin:0 0 var(--s5)}
+.page.layered-places .sec-head{margin-bottom:var(--s4)}
+.atlas-workspace{grid-template-columns:minmax(280px,340px) minmax(0,1fr);height:680px;min-height:0}
+.atlas-workspace .places-map{height:100%;min-width:0}
+.atlas-panel{padding:var(--s5);min-height:0}
+.atlas-panel h2{color:var(--surface);font-size:var(--step-2);line-height:1.15}
+.atlas-panel .atlas-level,.atlas-choices button>span,.atlas-branch-tags b{color:var(--cornflower-yellow)}
+.atlas-panel #atlas-summary{font-size:var(--step--1);line-height:1.55;color:var(--surface)}
+.atlas-choices{margin-top:var(--s4)}
+.atlas-choices button{padding:var(--s4) 0;gap:var(--s2)}
+.atlas-choices button i{position:static;transform:none;justify-self:end;color:var(--cornflower-yellow)}
+.atlas-choices button.map-active{box-shadow:inset 4px 0 0 var(--cornflower-yellow);padding-left:var(--s3)}
+.atlas-branch-tags b{background:color-mix(in srgb,var(--cornflower-yellow) 12%,transparent)}
+.chapter-callout strong{font-size:13px}
+.atlas-breadcrumb{flex-wrap:wrap}
+@media(max-width:1100px){
+ .atlas-workspace{grid-template-columns:1fr;height:auto}
+ .atlas-workspace .places-map{height:460px}
+ .atlas-panel{overflow:visible}
+}
+@media(max-width:520px){
+ .page.layered-places{padding-top:calc(var(--header-h) + var(--s5))}
+ .atlas-workspace .places-map{height:390px}
+ .atlas-panel{padding:var(--s4)}
+}
+.place-directory-fallback details{padding:var(--s4);border-bottom:1px solid var(--line);background:var(--surface)}
+.place-directory-fallback summary{cursor:pointer;font-weight:600;min-height:var(--s6)}
+.place-directory-fallback h3{margin:var(--s4) 0 var(--s2)}
+.place-directory-fallback ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:var(--s2);padding-left:var(--s5)}

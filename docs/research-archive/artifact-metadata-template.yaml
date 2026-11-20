@@ -1,0 +1,41 @@
+artifact_id: ARC-YYYY-NNNN
+title: ""
+artifact_type: document
+
+acquisition:
+  acquired_at: YYYY-MM-DD
+  acquired_by: ""
+  provider: ""
+  repository: ""
+  source_url: ""
+  provider_record_id: ""
+  original_filename: ""
+  sha256: ""
+
+description: ""
+date_text: ""
+place_text: ""
+language: ""
+
+rights:
+  rights_status: unknown
+  rights_holder: ""
+  license_or_permission: ""
+  access_level: private
+  public_display: false
+  rights_notes: ""
+
+processing:
+  ocr_status: not_started
+  transcription_status: not_started
+  derivative_filenames: []
+
+subjects:
+  people: []
+  families: []
+  events: []
+  places: []
+
+claims_supported: []
+claims_contradicted: []
+research_notes: ""
